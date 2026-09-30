@@ -1,0 +1,214 @@
+{
+  "candidates": 13,
+  "accepted": 8,
+  "by_status": {
+    "pass": 8,
+    "fail": 4,
+    "vacuous": 0,
+    "compile_error": 1
+  },
+  "mutants": {
+    "1": {
+      "compiled": true,
+      "tb_scoreboard": true,
+      "golden": [
+        "g_count_bounded",
+        "g_no_write_when_full",
+        "g_write_incr"
+      ],
+      "generated": [
+        "fifo_count_max",
+        "fifo_full_no_change",
+        "fifo_no_overflow"
+      ]
+    },
+    "2": {
+      "compiled": true,
+      "tb_scoreboard": true,
+      "golden": [
+        "g_count_bounded",
+        "g_no_read_when_empty",
+        "g_write_incr"
+      ],
+      "generated": [
+        "fifo_count_max",
+        "fifo_empty_no_change",
+        "fifo_no_underflow"
+      ]
+    },
+    "3": {
+      "compiled": true,
+      "tb_scoreboard": true,
+      "golden": [
+        "g_full_def"
+      ],
+      "generated": [
+        "fifo_full_flag_correct"
+      ]
+    },
+    "4": {
+      "compiled": true,
+      "tb_scoreboard": true,
+      "golden": [],
+      "generated": []
+    }
+  },
+  "history": {
+    "fifo_write_count": {
+      "prop": {
+        "name": "fifo_write_count",
+        "description": "Write operation increments count",
+        "antecedent": "wr_en && !full",
+        "operator": "|=>",
+        "consequent": "count == $past(count) + 1'b1"
+      },
+      "status": "fail",
+      "detail": "asserted 140x, first at t=285000",
+      "iteration": 1
+    },
+    "fifo_read_count": {
+      "prop": {
+        "name": "fifo_read_count",
+        "description": "Read operation decrements count",
+        "antecedent": "rd_en && !empty",
+        "operator": "|=>",
+        "consequent": "count == $past(count) - 1'b1"
+      },
+      "status": "fail",
+      "detail": "asserted 140x, first at t=285000",
+      "iteration": 1
+    },
+    "fifo_simultaneous_read_write": {
+      "prop": {
+        "name": "fifo_simultaneous_read_write",
+        "description": "Simultaneous read and write operations do not change count",
+        "antecedent": "do_wr && do_rd",
+        "operator": "|=>",
+        "consequent": "count == $past(count)"
+      },
+      "status": "compile_error",
+      "detail": "%Error: /home/hp/llm-rtl-verif/work/generated_props.sv:19:89: Can't find definition of variable: 'do_wr'\n%Error: /home/hp/llm-rtl-verif/work/generated_props.sv:19:98: Can't find definition of variable: 'do_rd'",
+      "iteration": 1
+    },
+    "fifo_full_no_change": {
+      "prop": {
+        "name": "fifo_full_no_change",
+        "description": "Full condition does not change when writing without a simultaneous read",
+        "antecedent": "full && wr_en && !rd_en",
+        "operator": "|=>",
+        "consequent": "count == $past(count)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 341x",
+      "iteration": 2
+    },
+    "fifo_empty_no_change": {
+      "prop": {
+        "name": "fifo_empty_no_change",
+        "description": "Empty condition does not change when reading without a simultaneous write",
+        "antecedent": "empty && rd_en && !wr_en",
+        "operator": "|=>",
+        "consequent": "count == $past(count)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 353x",
+      "iteration": 2
+    },
+    "fifo_count_max": {
+      "prop": {
+        "name": "fifo_count_max",
+        "description": "Count does not exceed depth",
+        "antecedent": "",
+        "operator": "invariant",
+        "consequent": "count <= DEPTH"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 2090x",
+      "iteration": 2
+    },
+    "fifo_count_min": {
+      "prop": {
+        "name": "fifo_count_min",
+        "description": "Count does not go below zero",
+        "antecedent": "",
+        "operator": "invariant",
+        "consequent": "count >= 0"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 2090x",
+      "iteration": 2
+    },
+    "fifo_no_overflow": {
+      "prop": {
+        "name": "fifo_no_overflow",
+        "description": "Full condition does not change when writing without a simultaneous read",
+        "antecedent": "full && wr_en && !rd_en",
+        "operator": "|=>",
+        "consequent": "count == $past(count)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 341x",
+      "iteration": 2
+    },
+    "fifo_no_underflow": {
+      "prop": {
+        "name": "fifo_no_underflow",
+        "description": "Empty condition does not change when reading without a simultaneous write",
+        "antecedent": "empty && rd_en && !wr_en",
+        "operator": "|=>",
+        "consequent": "count == $past(count)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 353x",
+      "iteration": 2
+    },
+    "fifo_full_flag_correct": {
+      "prop": {
+        "name": "fifo_full_flag_correct",
+        "description": "Full flag is correctly set",
+        "antecedent": "",
+        "operator": "invariant",
+        "consequent": "full == (count == DEPTH)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 2090x",
+      "iteration": 2
+    },
+    "fifo_empty_flag_correct": {
+      "prop": {
+        "name": "fifo_empty_flag_correct",
+        "description": "Empty flag is correctly set",
+        "antecedent": "",
+        "operator": "invariant",
+        "consequent": "empty == (count == 0)"
+      },
+      "status": "pass",
+      "detail": "antecedent hit 2090x",
+      "iteration": 2
+    },
+    "fifo_count_increment": {
+      "prop": {
+        "name": "fifo_count_increment",
+        "description": "Count increments on write",
+        "antecedent": "wr_en && !full",
+        "operator": "|=>",
+        "consequent": "count == $past(count) + 1'b1"
+      },
+      "status": "fail",
+      "detail": "asserted 140x, first at t=285000",
+      "iteration": 1
+    },
+    "fifo_count_decrement": {
+      "prop": {
+        "name": "fifo_count_decrement",
+        "description": "Count decrements on read",
+        "antecedent": "rd_en && !empty",
+        "operator": "|=>",
+        "consequent": "count == $past(count) - 1'b1"
+      },
+      "status": "fail",
+      "detail": "asserted 140x, first at t=285000",
+      "iteration": 1
+    }
+  }
+}
